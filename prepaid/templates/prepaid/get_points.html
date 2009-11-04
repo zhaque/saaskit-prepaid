@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p>You have {{ points }} point{{ points|pluralize }}</p>
+<p>Buy some points!</p>
+{{ form.render }}
+{% endblock %}
