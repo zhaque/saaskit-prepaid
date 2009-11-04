@@ -1,7 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-<p>You have {{ points }} point{{ points|pluralize }}</p>
-<p>Buy some points!</p>
-{{ form.render }}
+<p>You have <b>{{ points }}</b> point{{ points|pluralize }}.<br />
+It may take a moment for newly purchased points to appear.<br />
+<a href="javascript:location.href = location.href">Click here to refresh.</a></p>
+<br /><br />
+{% for q, form in forms %}
+	<p>Buy <b>{{ q }}</b> point{{ q|pluralize }}<br />
+		{{ form.render }}
+		<br /><br />
+	</p>
+{% endfor %}
 {% endblock %}
