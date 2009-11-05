@@ -59,6 +59,13 @@ class UnitPack(models.Model):
 	@classmethod
 	def get_user_credits(cls, user):
 		return sum(up.quantity for up in cls.get_user_packs(user))
+		
+	@classmethod
+	def credit(cls, user, quantity=1):
+		up = UnitPack()
+		up.user = user
+		up.quantity = quantity
+		up.save()
 
 	@classmethod
 	def consume(cls, user, quantity=1):

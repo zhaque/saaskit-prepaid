@@ -7,7 +7,9 @@ from .conf import *
 
 from paypal.standard.forms import PayPalPaymentsForm
 
-def _get_point_buy_form(username, points):
+def _get_point_buy_form(username, points, next = None):
+	if not next:
+		next = 'prepaid-index'
 	paypal_dict = {
 		'business': settings.PAYPAL_RECEIVER_EMAIL,
 		'amount': '%s' % (points * UNIT_COST),
@@ -16,7 +18,7 @@ def _get_point_buy_form(username, points):
 		'custom':str(username),
 		#'invoice': 'unique-invoice-id',
 		'notify_url': ROOT_URL + reverse('paypal-ipn'),
-		'return_url': ROOT_URL + reverse('prepaid-index'),
+		'return_url': ROOT_URL + reverse(next),
 		'cancel_return': ROOT_URL + reverse('prepaid-index'),
 	}
 
@@ -26,9 +28,10 @@ def _get_point_buy_form(username, points):
 @login_required
 @render_to('prepaid/get_points.html')
 def get_points(request):
+	next = request.GET.get('next')
 	forms = []
 	for i in [100, 200, 500, 1000, 5000]:
-		forms.append((i, _get_point_buy_form(request.user.username, i)))
+		forms.append((i, _get_point_buy_form(request.user.username, i, next)))
 	
 	points = UnitPack.get_user_credits(request.user)
 	return {'points':points, 'forms': forms}
