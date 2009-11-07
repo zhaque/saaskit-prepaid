@@ -13,8 +13,8 @@ def _get_point_buy_form(username, points, next = None):
 	paypal_dict = {
 		'business': settings.PAYPAL_RECEIVER_EMAIL,
 		'amount': '%s' % (points * UNIT_COST),
-		'item_name': '%s Points' % points,
-		'item_number': '%s%s' % (ITEM_PREFIX, points),
+		'item_name': 'Points', #'%s Points' % points,
+		'item_number': ITEM_PREFIX, #'%s%s' % (ITEM_PREFIX, points),
 		'custom':str(username),
 		#'invoice': 'unique-invoice-id',
 		'notify_url': ROOT_URL + reverse('paypal-ipn'),
@@ -26,12 +26,11 @@ def _get_point_buy_form(username, points, next = None):
 	return PayPalPaymentsForm(initial=paypal_dict)
 
 @login_required
-@render_to('prepaid/get_points.html')
-def get_points(request):
+@render_to('prepaid/points.html')
+def points(request):
 	next = request.GET.get('next')
-	forms = []
-	for i in [100, 200, 500, 1000, 5000]:
-		forms.append((i, _get_point_buy_form(request.user.username, i, next)))
+	
+	point_form = _get_point_buy_form(request.user.username, 0, next=next)
 	
 	points = UnitPack.get_user_credits(request.user)
-	return {'points':points, 'forms': forms}
+	return {'points':points, 'point_form':point_form, 'packs':PREPAID_UNIT_PACKS}
