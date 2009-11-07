@@ -80,6 +80,7 @@ class UnitPack(models.Model):
 
 	@classmethod
 	def consume(cls, user, quantity=1, reason=''):
+		q_total = quantity
 		ups = cls.get_user_packs(user)
 		if sum(up.quantity for up in ups) < quantity:
 			raise ValueError("User does not have enough units.")
@@ -95,7 +96,7 @@ class UnitPack(models.Model):
 		t = Transaction()
 		t.user = user
 		t.info = reason
-		t.amount = quantity
+		t.amount = q_total
 		t.total = cls.get_user_credits(user)
 		t.save()
 			

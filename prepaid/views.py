@@ -33,4 +33,5 @@ def points(request):
 	point_form = _get_point_buy_form(request.user.username, 0, next=next)
 	
 	points = UnitPack.get_user_credits(request.user)
+	
 	return {'points':points, 'point_form':point_form, 'packs':PREPAID_UNIT_PACKS}
