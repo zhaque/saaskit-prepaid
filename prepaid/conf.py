@@ -5,6 +5,8 @@ UNIT_COST = getattr(settings, 'PREPAID_UNIT_COST', .1)
 
 MIN_WITHDRAWAL = getattr(settings, 'PREPAID_MIN_WITHDRAWAL', 10)
 
+AUTO_APPROVE = getattr(settings, 'PREPAID_AUTO_APPROVE_WITHDRAWALS', True)
+
 ROOT_URL = getattr(settings, 'ROOT_URL')
 
 RECHARGE_TEXT = 'Point Purchase'

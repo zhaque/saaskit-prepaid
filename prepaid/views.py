@@ -60,6 +60,6 @@ def withdraw(request):
 			else:
 				w = UnitPack.withdraw(request.user, amount, email)
 				
-				# NOTE: We could approve this right here if we wanted
-				# w.approve()		
+				if AUTO_APPROVE:
+					w.approve()
 	return redirect('prepaid-index')
