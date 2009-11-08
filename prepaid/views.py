@@ -1,9 +1,11 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
+from django.shortcuts import redirect
 from .util import render_to
 from .models import UnitPack
 from .conf import *
+from .forms import WithdrawalForm
 
 from paypal.standard.forms import PayPalPaymentsForm
 
@@ -34,4 +36,30 @@ def points(request):
 	
 	points = UnitPack.get_user_credits(request.user)
 	
-	return {'points':points, 'point_form':point_form, 'packs':PREPAID_UNIT_PACKS}
+	withdrawal_form = WithdrawalForm()
+	if request.user.withdrawals.count():
+		withdrawal_form.initial['paypal_email'] = request.user.withdrawals.all()[0].email
+	
+	packs = PREPAID_UNIT_PACKS
+	
+	min_withdrawal = MIN_WITHDRAWAL
+	can_withdraw = points > min_withdrawal
+	
+	return locals()
+
+@login_required
+def withdraw(request):
+	if request.method == 'POST':
+		form = WithdrawalForm(request.POST)
+		if form.is_valid():
+			amount = form.cleaned_data['amount']
+			email = form.cleaned_data['paypal_email']
+			credits = UnitPack.get_user_credits(request.user)
+			if amount > credits:
+				request.user.message_set.create(message='Points withdrawn must be between %s and %s' % (MIN_WITHDRAWAL, credits))
+			else:
+				w = UnitPack.withdraw(request.user, amount, email)
+				
+				# NOTE: We could approve this right here if we wanted
+				# w.approve()		
+	return redirect('prepaid-index')

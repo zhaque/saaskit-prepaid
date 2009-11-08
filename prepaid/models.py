@@ -7,6 +7,7 @@ from .conf import *
 from decimal import Decimal
 
 from paypal.standard.ipn.signals import payment_was_successful
+from paypal.api import do_pay
 from django.http import QueryDict
 	
 def receive_point_buy(sender, **kwargs):
@@ -99,6 +100,16 @@ class UnitPack(models.Model):
 		t.amount = q_total
 		t.total = cls.get_user_credits(user)
 		t.save()
+		
+	@classmethod
+	def withdraw(cls, user, quantity, email):
+		cls.consume(user, quantity, reason='Withdrawal')
+		w = Withdrawal()
+		w.user = user
+		w.points = quantity
+		w.email = email
+		w.save()
+		return w
 			
 class Transaction(models.Model):
 	user = models.ForeignKey(auth.models.User, related_name='prepaid_transactions')
@@ -113,6 +124,28 @@ class Transaction(models.Model):
 	
 	class Meta:
 		ordering = ['-date']
+		
+class Withdrawal(models.Model):
+	date = models.DateTimeField(auto_now_add=True)
+	user = models.ForeignKey(auth.models.User, related_name='withdrawals')
+	email = models.EmailField('Paypal Email')
+	points = models.IntegerField(default=0)
+	approved = models.BooleanField(default=False, editable=False)
+	
+	def __unicode__(self):
+		return self.email
+	
+	def approve(self):
+		if self.approved:
+			return
+		r = do_pay(self.email, self.points * UNIT_COST, subject='Point Withdrawal')
+		if r:
+			self.approved = True
+			self.save()
+		
+	class Meta:
+		ordering = ['-date']
+	
 
 # provide default value for initial_quantity
 def _handle_pre_save(sender, instance=None, **kwargs):
