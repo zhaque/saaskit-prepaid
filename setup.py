@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-setup(name="django-prepaid",
+setup(name="saaskit-prepaid",
            version="0.1",
            description="Django application supporting expiring units",
            author="CrowdSense",
