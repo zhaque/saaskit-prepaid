@@ -7,7 +7,7 @@ from .conf import *
 from decimal import Decimal
 
 from paypal.standard.ipn.signals import payment_was_successful
-from paypal.api import do_pay
+from paypal_api import do_pay
 from django.http import QueryDict
 	
 def receive_point_buy(sender, **kwargs):
