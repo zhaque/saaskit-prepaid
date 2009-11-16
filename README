@@ -24,6 +24,7 @@ Table of Contents
     3.2 Methods
     3.3 Class methods
 4 License
+5 Settings
 
 
 1 Installation
@@ -89,3 +90,25 @@ Table of Contents
 4 License
 ~~~~~~~~~
   This project is licensed on terms of GPL (GPL-LICENSE.txt) licenses 
+
+4 Settings
+~~~~~~~~~
+- PREPAID_UNIT_COST (defaults to 0.10)
+	- Dollar value of each point, used to determine withdrawal value
+	
+- PREPAID_MIN_WITHDRAWAL (defaults to 10)
+	- Minimum points needed to perform a withdrawal
+	
+- PREPAID_AUTO_APPROVE (defaults to True)
+	- Automatically approve and fund withdrawals
+	- If False, you must approve withdrawals manually using admin
+
+- PREPAID_UNIT_PACKS
+	- A list of available unit pack sizes and their respective cost
+	- Default: (
+		(10, '1.29'),
+		(100, '12.49'),
+		(250, '29.99'),
+		(500, '57.99'),
+		(1000, '109.99'),
+	)
