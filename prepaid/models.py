@@ -3,7 +3,7 @@ import datetime
 from django.conf import settings
 from django.contrib import auth
 from django.db import models
-from .conf import *
+from prepaid.conf import *
 from decimal import Decimal
 
 from paypal.standard.ipn.signals import payment_was_successful

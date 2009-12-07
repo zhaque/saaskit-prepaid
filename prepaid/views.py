@@ -2,9 +2,9 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
+from prepaid.conf import *
 from .util import render_to
 from .models import UnitPack
-from .conf import *
 from .forms import WithdrawalForm
 
 from paypal.standard.forms import PayPalPaymentsForm
