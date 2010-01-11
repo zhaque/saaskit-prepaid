@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(name="saaskit-prepaid",
            version="0.1",
            description="Django application supporting expiring units",
-           author="SaaS kit",
+           author="SaaSkit",
            author_email="admin@saaskit.org",
            packages=find_packages(),
            include_package_data=True,
